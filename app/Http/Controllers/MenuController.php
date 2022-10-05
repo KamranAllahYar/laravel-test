@@ -91,8 +91,25 @@ class MenuController extends BaseController
         }
     ]
      */
+    public function getNestedMenuItems($menuItems, $parentMenuItem)
+    {
+        $items = $menuItems->filter(function ($item) use ($parentMenuItem) {
+            return $item->parent_id == $parentMenuItem->id;
+        });
+        foreach ($items as $item) {
+            $items->children = $this->getNestedMenuItems($items, $item);
+        }
+        return $items;
+    }
 
-    public function getMenuItems() {
-        throw new \Exception('implement in coding task 3');
+    public function getMenuItems()
+    {
+        $menuItems = MenuItem::all();
+        foreach ($menuItems as $menuItem) {
+            $menuItem->children = $this->getNestedMenuItems($menuItems, $menuItem);
+        }
+        return $menuItems->filter(function ($item) {
+            return $item->parent_id == null;
+        });
     }
 }

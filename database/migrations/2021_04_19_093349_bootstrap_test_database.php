@@ -46,6 +46,8 @@ class BootstrapTestDatabase extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('events');
+        Schema::dropIfExists('workshops');
+        Schema::dropIfExists('menu_items');
     }
 }
